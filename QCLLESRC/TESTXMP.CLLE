@@ -1,0 +1,67 @@
+ /* ---------------------------------------------------------------- */
+ /*  Copyright (c) 2019 Remain Software http://remainsoftware.com    */
+ /*                                                                  */
+ /*  Permission is hereby granted, free of charge, to any person     */
+ /*  obtaining a copy of this software and associated documentation  */
+ /*  files (the "Software"), to deal in the Software without         */
+ /*  restriction, including without limitation the rights to use,    */
+ /*  copy, modify, merge, publish, distribute, sublicense, and/or    */
+ /*  sell copies of the Software, and to permit persons to whom the  */
+ /*  Software is furnished to do so, subject to the following        */
+ /*  conditions:                                                     */
+ /*                                                                  */
+ /*  The above copyright notice and this permission notice shall be  */
+ /*  included in all copies or substantial portions of the Software. */
+ /*                                                                  */
+ /*  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, */
+ /*  EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES */
+ /*  OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND        */
+ /*  NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT     */
+ /*  HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,    */
+ /*  WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING    */
+ /*  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR   */
+ /*  OTHER DEALINGS IN THE SOFTWARE.                                 */
+ /*                                                                  */
+ /*  Program ....: TESTXMP                                           */
+ /*  Description : A test example                                    */
+ /*  Author .....: W.S. Jongman                                      */
+ /* ---------------------------------------------------------------- */
+             PGM
+
+ /* ---------------------------------------------------------------- */
+ /* Declare variables                                                */
+ /* ---------------------------------------------------------------- */
+             DCL        VAR(&TEXT) TYPE(*CHAR) LEN(10)
+
+ /* ---------------------------------------------------------------- */
+ /* Catch all errors                                                 */
+ /* ---------------------------------------------------------------- */
+             MONMSG     MSGID(CPF0000) EXEC(GOTO CMDLBL(ENDPGM))
+
+ /* ---------------------------------------------------------------- */
+ /* Send a message to the message queue                              */
+ /* ---------------------------------------------------------------- */
+             CHGVAR     VAR(&TEXT) VALUE(HELLO)
+
+          /* ------------------------------------------------------- */
+          /* The actual test                                         */
+          /* ------------------------------------------------------- */
+             IF         COND(&TEXT *NE 'HELLO') THEN(DO)
+             DMPCLPGM
+             SNDPGMMSG  MSGID(CPF9898) MSGF(QCPFMSG) MSGDTA('The text was not the same, see dump') MSGTYPE(*ESCAPE)
+             ENDDO
+             GOTO       CMDLBL(ENDPGM)
+
+
+ /* ---------------------------------------------------------------- */
+ /* Errors in the program                                            */
+ /* ---------------------------------------------------------------- */
+ERROR:
+             SNDPGMMSG  MSGID(CPF9898) MSGF(QCPFMSG) MSGDTA('An unexpected error occured') MSGTYPE(*ESCAPE)
+
+ /* ---------------------------------------------------------------- */
+ /* Exit                                                             */
+ /* ---------------------------------------------------------------- */
+ENDPGM:
+             SNDPGMMSG  MSGID(CPF9898) MSGF(QCPFMSG) MSGDTA('Test TESTTEST says hello') TOPGMQ(*SAME)
+             ENDPGM
