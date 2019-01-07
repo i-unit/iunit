@@ -10,8 +10,8 @@ source build.sh
 iunit.restore IUNIT  
 
 ## Test
-addlible iunit
-runone iunit pass
+addlible iunit  
+runone iunit pass  
 runall
 
 ## Using
