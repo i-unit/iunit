@@ -17,10 +17,9 @@ runall
 ## Using
 Create a library 'mytest'  
 Create a CLLE program named 'pass' [with this program source.](https://raw.githubusercontent.com/i-unit/iunit/master/QCLLESRC/PASS.CLLE)   
-
 addlible iunit *last  
-addlible mytest *last  
-runall mytest
+ADDLIBLE LIB(MYTEST) POSITION(*BEFORE IUNIT)    
+runall mytest  
 
 Create a CLLE program named 'fail' [with this program source.](https://raw.githubusercontent.com/i-unit/iunit/master/QCLLESRC/FAIL.CLLE)   
 runall mytest
