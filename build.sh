@@ -18,10 +18,6 @@ else
   restore.crtlib "${lib}" "${txt}"
   restore.crtsrcpf "${lib}" "${dir}" "${txt}"
   iunit.compile "$lib"
-  system -Kn "ADDLIBLE ${lib} *LAST"
-  echo
-  system -Kn "RUNONE ${lib}/PASS"
-  echo
   echo 'Done.'
 fi
 }
@@ -87,7 +83,4 @@ iunit.compile(){
   lib=$1
   system -Kn "CRTBNDCL PGM(${lib}/@BUILD) SRCFILE(${lib}/QCLLESRC) SRCMBR(@BUILD)"
   system -Kn "call ${lib}/@BUILD PARM(${lib})"
-  echo
-  echo 'Compile Successful. Running example tests'
-
 }
