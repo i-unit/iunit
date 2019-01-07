@@ -3,9 +3,9 @@
 Welcome to IUNIT. The lightweight extensible unit testing framework for IBM i.
 
 ## Prerequisites
-[IBM i package manager](https://bitbucket.org/ibmi/opensource/src/master/docs/yum/) (if that link is dead search 'ibm i yum package manager')
-bash (yum install bash)
-putty 
+* [IBM i package manager](https://bitbucket.org/ibmi/opensource/src/master/docs/yum/) (if that link is dead search 'ibm i yum package manager')  
+* bash (yum install bash)  
+* putty 
 
 ## First Time Access To IBMi
 1. putty \<user\>@\<your.ibmi\>
