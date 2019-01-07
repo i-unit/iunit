@@ -1,9 +1,9 @@
 # IUNIT IBM i Unit Testing Framework
 
-Welcome to IUNIT. The lightweight extensible unit testing framework for IBM i.
+Welcome to IUNIT. The lightweight extensible unit testing framework for IBM i.  
+Check [prerequisites.](https://github.com/i-unit/iunit/blob/master/PREREQUISITES.md)  
 
 ## Building
-check [prerequisites](https://github.com/i-unit/iunit/blob/master/PREREQUISITES.md)  
 git clone https://github.com/i-unit/iunit.git  
 cd iunit  
 source build.sh 
