@@ -7,27 +7,25 @@
 #
 # Restore the IUNIT code from git into libraries and source files
 # Parameters: library 
-restore(){
+iunit.restore(){
   lib=$1
+
+  if [[ -z "$1" ]]; then
+    echo "Must provide library. (e.g. iunit.restore IUNIT)"
+    exit 1
+  fi
+  
   txt="IBM i Unit Testing Framework"
   dir=$PWD
   restore.crtlib "${lib}" "${txt}"
   restore.crtsrcpf "${lib}" "${dir}" "${txt}"
+  iunit.compile "$lib"
   system -Kn "ADDLIBLE ${lib} *LAST"
-  echo
-  echo 'Compile Successful. Running example tests'
   echo
   system -Kn "RUNONE ${lib}/PASS"
   echo
   echo 'Done.'
 }
-
-## Delete a library 
-## Parameters: library 
-remove(){ 
-  lib=$1 
-  system -Kn "DLTLIB LIB(${lib})" 
-} 
   
 ## Create a library 
 ## Parameters: library, text 
@@ -86,8 +84,11 @@ restore.cpyfrmstmf(){
 #
 # Compile the transport build command and execute it.
 # Parameters: library 
-restore.compile(){
+iunit.compile(){
   lib=$1
   system -Kn "CRTBNDCL PGM(${lib}/@BUILD) SRCFILE(${lib}/QCLLESRC) SRCMBR(@BUILD)"
-  system -Kn "${lib}/@BUILD PARM(${lib})"
+  system -Kn "call ${lib}/@BUILD PARM(${lib})"
+  echo
+  echo 'Compile Successful. Running example tests'
+
 }
