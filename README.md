@@ -22,7 +22,8 @@ Welcome to IUNIT. The lightweight extensible unit testing framework for IBM i.
 ## Building
 git clone https://github.com/i-unit/iunit.git  
 cd iunit  
-./build.sh IUNIT  
+source build.sh 
+iunit.restore IUNIT  
 
 ## Using
 Create a library 'mytest'  
