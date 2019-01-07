@@ -8,13 +8,11 @@
 # Restore the IUNIT code from git into libraries and source files
 # Parameters: library 
 iunit.restore(){
-  lib=$1
+lib=$1
 
-  if [[ -z "$1" ]]; then
+if [[ -z "$1" ]]; then
     echo "Must provide library. (e.g. iunit.restore IUNIT)"
-    exit 1
-  fi
-  
+else  
   txt="IBM i Unit Testing Framework"
   dir=$PWD
   restore.crtlib "${lib}" "${txt}"
@@ -25,6 +23,7 @@ iunit.restore(){
   system -Kn "RUNONE ${lib}/PASS"
   echo
   echo 'Done.'
+fi
 }
   
 ## Create a library 
