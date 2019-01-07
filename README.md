@@ -3,9 +3,10 @@
 Welcome to IUNIT. The lightweight extensible unit testing framework for IBM i.
 
 ## Building
-Open a SSH shell to anywhere on the IFS
+Open a SSH shell to the IFS
 
 git clone https://github.com/i-unit/iunit.git  
+cd iunit  
 ./build.sh IUNIT  
 
 ## Using
