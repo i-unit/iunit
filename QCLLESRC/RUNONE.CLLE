@@ -1,4 +1,4 @@
- /* ---------------------------------------------------------------- */
+  /* ---------------------------------------------------------------- */
  /*  Copyright (c) 2019 Remain Software http://remainsoftware.com    */
  /*                                                                  */
  /*  Permission is hereby granted, free of charge, to any person     */
@@ -23,19 +23,19 @@
  /*  OTHER DEALINGS IN THE SOFTWARE.                                 */
  /*                                                                  */
  /*                                                                  */
- /*  Program ....: @RUNALL                                           */
- /*  Description : RUN ALL TESTS IN THE SUPPLIED LIBRARY             */
+ /*  Program ....: @RUNONE                                           */
+ /*  Description : RUN ONE TEST IN THE SUPPLIED LIBRARY              */
  /*  Author .....: W.S. Jongman                                      */
  /* ---------------------------------------------------------------- */
-             PGM        PARM(&LIB)
+             PGM        PARM(&LIB &PGM)
 
  /* ---------------------------------------------------------------- */
  /* Declare the varaibles                                            */
  /* ------------------------- -------------------------------------- */
              DCL        VAR(&LIB) TYPE(*CHAR) LEN(10)
+             DCL        VAR(&PGM) TYPE(*CHAR) LEN(10)
              DCL        VAR(&MSG) TYPE(*CHAR) LEN(80)
              DCL        VAR(&MSG2) TYPE(*CHAR) LEN(80)
-             DCL        VAR(&TIME) TYPE(*CHAR) LEN(8)
              DCL        VAR(&FAIL) TYPE(*DEC) LEN(7 0)
              DCL        VAR(&GOOD) TYPE(*DEC) LEN(7 0)
              DCL        VAR(&TOTAL) TYPE(*DEC)  LEN(7 0)
@@ -44,64 +44,30 @@
              DCL        VAR(&GOODA) TYPE(*CHAR) LEN(5)
 
  /* ---------------------------------------------------------------- */
- /* Declare and prepare the file                                     */
- /* ------------------------- -------------------------------------- */
-             DCLF       FILE(QADSPOBJ)
-             DSPOBJD    OBJ(&LIB/*ALL) OBJTYPE(*PGM) OUTPUT(*OUTFILE) OUTFILE(QTEMP/@RUNALL)
-             OVRDBF     FILE(QADSPOBJ) TOFILE(QTEMP/@RUNALL)
-
-
- /* ---------------------------------------------------------------- */
  /* Call Setup program                                               */
  /* ------------------------- -------------------------------------- */
-             CHGVAR     VAR(&MSG) VALUE('@SETUP program called')
-             CALL       PGM(&LIB/@SETUP) PARM(&LIB)
-             MONMSG     MSGID(CPF0000) EXEC(CHGVAR VAR(&MSG) VALUE(&LIB *TCAT '/@SETUP program not found.'))
+             CHGVAR     VAR(&MSG) VALUE('SETUP program called')
+             CALL       PGM(&LIB/SETUP) PARM(&LIB)
+             MONMSG     MSGID(CPF0000) EXEC(CHGVAR VAR(&MSG) VALUE(&LIB *TCAT '/SETUP program not found.'))
              SNDPGMMSG  MSGID(UTE0001) MSGF(&LIB/UTEMSG) MSGDTA(&MSG) TOPGMQ(*SAME)
 
  /* ---------------------------------------------------------------- */
  /* Read all records from the program                                */
  /* ------------------------- -------------------------------------- */
-             RCVF
-             MONMSG     MSGID(CPF0000) EXEC(GOTO CMDLBL(CLOSE))
-
- LOOPS:      IF         COND(%SST(&ODOBNM 1 1) *NE '@') THEN(DO)
+             IF         COND(%SST(&PGM 1 1) *NE '@') THEN(DO)
                 CHGVAR     VAR(&GOOD) VALUE(&GOOD + 1)
 
-             SNDPGMMSG  MSGID(UTE0003) MSGF(&LIB/UTEMSG) +
-                          MSGDTA(&ODOBNM) TOPGMQ(*SAME)
-
-                CALL       PGM(&ODLBNM/&ODOBNM)
+                CALL       PGM(&LIB/&PGM)
                 MONMSG     MSGID(CPF0000) EXEC(DO)
 
-                   RTVSYSVAL  SYSVAL(QTIME) RTNVAR(&TIME)
-                   SNDPGMMSG  MSGID(UTE0001) MSGF(&LIB/UTEMSG) MSGDTA('*') TOPGMQ(*SAME)
-                   SNDPGMMSG  MSGID(UTE0001) MSGF(&LIB/UTEMSG) MSGDTA('* -------' *CAT &TIME *CAT +
-                                '----------') TOPGMQ(*SAME)
-                   SNDPGMMSG  MSGID(UTE0001) MSGF(&LIB/UTEMSG) MSGDTA('***** FAIL     ' *CAT &ODOBNM) +
-                                TOPGMQ(*SAME)
-                   SNDPGMMSG  MSGID(UTE0001) MSGF(&LIB/UTEMSG) MSGDTA('* -------------------------') +
-                                TOPGMQ(*SAME)
-
-                   CHGVAR     VAR(&MSG) VALUE(&ODLBNM *TCAT '/' *TCAT &ODOBNM *TCAT ' unit test failed. See +
+                   CHGVAR     VAR(&MSG) VALUE(&LIB  *TCAT '/' *TCAT &PGM    *TCAT ' unit test failed. See +
                                 previous message for details')
                    SNDPGMMSG  MSGID(UTE0002) MSGF(&LIB/UTEMSG) MSGDTA(&MSG) TOPGMQ(*SAME)
 
                    CHGVAR     VAR(&FAIL) VALUE(&FAIL + 1)
                    CHGVAR     VAR(&GOOD) VALUE(&GOOD - 1)
                 ENDDO
-
-                RTVSYSVAL  SYSVAL(QTIME) RTNVAR(&TIME)
-                SNDPGMMSG  MSGID(UTE0001) MSGF(&LIB/UTEMSG) MSGDTA('*') TOPGMQ(*SAME)
-                SNDPGMMSG  MSGID(UTE0001) MSGF(&LIB/UTEMSG) MSGDTA('* Ended on: ' *CAT &TIME *CAT ' for ' *CAT +
-                             &ODOBNM) TOPGMQ(*SAME)
-                SNDPGMMSG  MSGID(UTE0001) MSGF(&LIB/UTEMSG) MSGDTA('*') TOPGMQ(*SAME)
-
              ENDDO
-
-             RCVF
-             MONMSG     MSGID(CPF0000) EXEC(GOTO CMDLBL(CLOSE))
-             GOTO       CMDLBL(LOOPS)
 
  /* ---------------------------------------------------------------- */
  /* Log result message                                               */
@@ -114,21 +80,19 @@
 
              CHGVAR     VAR(&MSG) VALUE(&TOTALA *BCAT 'tests ran.' *BCAT &FAILA *TCAT ' failed, ' *BCAT &GOODA +
                           *BCAT 'good.')
-             IF         COND(&FAIL *GT 0) THEN(SNDPGMMSG MSGID(UTE0002) MSGF(&LIB/UTEMSG) MSGDTA(&MSG))
+             IF         COND(&FAIL *GT 0) THEN(SNDPGMMSG MSGID(UTE0002) MSGF(&LIB/UTEMSG) MSGDTA(&MSG) +
+                          TOPGMQ(*PRV) MSGTYPE(*COMP))
              IF         COND(&FAIL *EQ 0) THEN(SNDPGMMSG MSGID(UTE0001) MSGF(&LIB/UTEMSG) MSGDTA(&MSG) +
                           TOPGMQ(*PRV) MSGTYPE(*COMP))
 
  /* ---------------------------------------------------------------- */
  /* Call teardown                                                    */
- /* ---------------------------------------------------------------- */
-             CHGVAR     VAR(&MSG2) VALUE('@TEARDOWN program called')
-             CALL       PGM(&LIB/@TEARDOWN) PARM(&LIB)
-             MONMSG     MSGID(CPF0000) EXEC(CHGVAR VAR(&MSG2) VALUE(&LIB *TCAT '/@TEARDOWN program not +
+ /* ------------------------- -------------------------------------- */
+             CHGVAR     VAR(&MSG2) VALUE('TEARDOWN program called')
+             CALL       PGM(&LIB/TEARDOWN) PARM(&LIB)
+             MONMSG     MSGID(CPF0000) EXEC(CHGVAR VAR(&MSG2) VALUE(&LIB *TCAT '/TEARDOWN program not +
                           found.'))
              SNDPGMMSG  MSGID(UTE0001) MSGF(&LIB/UTEMSG) MSGDTA(&MSG2) TOPGMQ(*SAME)
-
-             DSPJOBLOG
-             MONMSG     MSGID(CPF0000)
 
              IF         COND(&FAIL *GT 0) THEN(SNDPGMMSG MSGID(UTE0002) MSGF(&LIB/UTEMSG) MSGDTA(&MSG) +
                           MSGTYPE(*ESCAPE))
