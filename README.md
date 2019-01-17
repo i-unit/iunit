@@ -4,10 +4,10 @@ Welcome to IUNIT. The lightweight extensible unit testing framework for IBM i.
 Check [prerequisites.](https://github.com/i-unit/iunit/blob/master/PREREQUISITES.md)  
 
 ## Building
-* git clone https://github.com/i-unit/iunit.git  
-* cd iunit  
-* source build.sh 
-* iunit.restore IUNIT  
+git clone https://github.com/i-unit/iunit.git  
+cd iunit  
+source build.sh  
+iunit.restore IUNIT  
 
 ## Test
 addlible iunit  
