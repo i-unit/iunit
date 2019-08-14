@@ -81,6 +81,6 @@ restore.cpyfrmstmf(){
 # Parameters: library 
 iunit.compile(){
   lib=$1
-  system -Kn "CRTBNDCL PGM(${lib}/@BUILD) SRCFILE(${lib}/QCLLESRC) SRCMBR(@BUILD)"
-  system -Kn "call ${lib}/@BUILD PARM(${lib})"
+  system -Kn "CRTBNDCL PGM(${lib}/I_BUILD) SRCFILE(${lib}/QCLLESRC) SRCMBR(I_BUILD)"
+  system -Kn "call ${lib}/I_BUILD PARM(${lib})"
 }
