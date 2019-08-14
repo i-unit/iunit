@@ -1,0 +1,101 @@
+  /* ---------------------------------------------------------------- */
+ /*  Copyright (c) 2019 Remain Software http://remainsoftware.com    */
+ /*                                                                  */
+ /*  Permission is hereby granted, free of charge, to any person     */
+ /*  obtaining a copy of this software and associated documentation  */
+ /*  files (the "Software"), to deal in the Software without         */
+ /*  restriction, including without limitation the rights to use,    */
+ /*  copy, modify, merge, publish, distribute, sublicense, and/or    */
+ /*  sell copies of the Software, and to permit persons to whom the  */
+ /*  Software is furnished to do so, subject to the following        */
+ /*  conditions:                                                     */
+ /*                                                                  */
+ /*  The above copyright notice and this permission notice shall be  */
+ /*  included in all copies or substantial portions of the Software. */
+ /*                                                                  */
+ /*  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, */
+ /*  EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES */
+ /*  OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND        */
+ /*  NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT     */
+ /*  HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,    */
+ /*  WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING    */
+ /*  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR   */
+ /*  OTHER DEALINGS IN THE SOFTWARE.                                 */
+ /*                                                                  */
+ /*                                                                  */
+ /*  Program ....: I_RUNONE                                           */
+ /*  Description : RUN ONE TEST IN THE SUPPLIED LIBRARY              */
+ /*  Author .....: W.S. Jongman                                      */
+ /* ---------------------------------------------------------------- */
+             PGM        PARM(&LIB &PGM)
+
+ /* ---------------------------------------------------------------- */
+ /* Declare the varaibles                                            */
+ /* ------------------------- -------------------------------------- */
+             DCL        VAR(&LIB) TYPE(*CHAR) LEN(10)
+             DCL        VAR(&PGM) TYPE(*CHAR) LEN(10)
+             DCL        VAR(&MSG) TYPE(*CHAR) LEN(80)
+             DCL        VAR(&MSG2) TYPE(*CHAR) LEN(80)
+             DCL        VAR(&FAIL) TYPE(*DEC) LEN(7 0)
+             DCL        VAR(&GOOD) TYPE(*DEC) LEN(7 0)
+             DCL        VAR(&TOTAL) TYPE(*DEC)  LEN(7 0)
+             DCL        VAR(&TOTALA) TYPE(*CHAR) LEN(5)
+             DCL        VAR(&FAILA) TYPE(*CHAR) LEN(5)
+             DCL        VAR(&GOODA) TYPE(*CHAR) LEN(5)
+
+ /* ---------------------------------------------------------------- */
+ /* Call Setup program                                               */
+ /* ------------------------- -------------------------------------- */
+             CHGVAR     VAR(&MSG) VALUE('I_SETUP program called')
+             CALL       PGM(&LIB/I_SETUP) PARM(&LIB)
+             MONMSG     MSGID(CPF0000) EXEC(CHGVAR VAR(&MSG) VALUE(&LIB *TCAT +
+                          '/I_SETUP program not found.'))
+             SNDPGMMSG  MSGID(UTE0001) MSGF(&LIB/UTEMSG) MSGDTA(&MSG) TOPGMQ(*SAME)
+
+ /* ---------------------------------------------------------------- */
+ /* Read all records from the program                                */
+ /* ------------------------- -------------------------------------- */
+             IF         COND(%SST(&PGM 1 1) *NE 'I_') THEN(DO)
+                CHGVAR     VAR(&GOOD) VALUE(&GOOD + 1)
+
+                CALL       PGM(&LIB/&PGM)
+                MONMSG     MSGID(CPF0000) EXEC(DO)
+
+                   CHGVAR     VAR(&MSG) VALUE(&LIB  *TCAT '/' *TCAT &PGM    *TCAT ' unit test failed
+                                previous message for details')
+                   SNDPGMMSG  MSGID(UTE0002) MSGF(&LIB/UTEMSG) MSGDTA(&MSG) TOPGMQ(*SAME)
+
+                   CHGVAR     VAR(&FAIL) VALUE(&FAIL + 1)
+                   CHGVAR     VAR(&GOOD) VALUE(&GOOD - 1)
+                ENDDO
+             ENDDO
+
+ /* ---------------------------------------------------------------- */
+ /* Log result message                                               */
+ /* ------------------------- -------------------------------------- */
+ CLOSE:
+             CHGVAR     VAR(&TOTAL) VALUE(&FAIL + &GOOD)
+             CHGVAR     VAR(&TOTALA) VALUE(&TOTAL)
+             CHGVAR     VAR(&GOODA) VALUE(&GOOD)
+             CHGVAR     VAR(&FAILA) VALUE(&FAIL)
+
+             CHGVAR     VAR(&MSG) VALUE(&TOTALA *BCAT 'tests ran.' *BCAT &FAILA *TCAT ' failed, ' *B
+                          *BCAT 'good.')
+             IF         COND(&FAIL *GT 0) THEN(SNDPGMMSG MSGID(UTE0002) MSGF(&LIB/UTEMSG) MSGDTA(&MS
+                          TOPGMQ(*PRV) MSGTYPE(*COMP))
+             IF         COND(&FAIL *EQ 0) THEN(SNDPGMMSG MSGID(UTE0001) MSGF(&LIB/UTEMSG) MSGDTA(&MS
+                          TOPGMQ(*PRV) MSGTYPE(*COMP))
+
+ /* ---------------------------------------------------------------- */
+ /* Call teardown                                                    */
+ /* ------------------------- -------------------------------------- */
+             CHGVAR     VAR(&MSG2) VALUE('I_TEARDOWN program called')
+             CALL       PGM(&LIB/I_TEARDOWN) PARM(&LIB)
+             MONMSG     MSGID(CPF0000) EXEC(CHGVAR VAR(&MSG2) VALUE(&LIB *TCAT +
+                          '/I_TEARDOWN program not found.'))
+             SNDPGMMSG  MSGID(UTE0001) MSGF(&LIB/UTEMSG) MSGDTA(&MSG2) TOPGMQ(*SAME)
+
+             IF         COND(&FAIL *GT 0) THEN(SNDPGMMSG MSGID(UTE0002) MSGF(&LIB/UTEMSG) MSGDTA(&MS
+                          MSGTYPE(*ESCAPE))
+
+             ENDPGM
