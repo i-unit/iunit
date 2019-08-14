@@ -49,30 +49,23 @@
                           DFTACTGRP(*NO) ACTGRP(*NEW)
              CRTMSGF    MSGF(&LIB/UTEMSG) TEXT('IUNIT - Message File')
 
-             ADDMSGD    MSGID(UTE0001) MSGF(IUNIT/UTEMSG) MSG('&1') +
-                          SECLVL('&N Cause . . . . . :   The unit +
-                          test program reported the following non +
-                          critical message. &N Recovery. . . . :   +
+             ADDMSGD    MSGID(UTE0001) MSGF(&LIB/UTEMSG) MSG('&1') SECLVL('&N +
+                          Cause . . . . . :   The unit test program reported the +
+                          following non critical message. &N Recovery. . . . :   +
                           None needed') FMT((*CHAR 120)) CCSID(*JOB)
 
-             ADDMSGD    MSGID(UTE0002) MSGF(IUNIT/UTEMSG) MSG('&1') +
-                          SECLVL('&n Cause . . . . . :   The unit +
-                          test program reported the following +
-                          critical error. & N Recovery. . . . :   +
-                          See the lower level messages for +
-                          details') SEV(40) FMT((*CHAR 120)) +
+             ADDMSGD    MSGID(UTE0002) MSGF(&LIB/UTEMSG) MSG('&1') SECLVL('&n +
+                          Cause . . . . . :   The unit test program reported the +
+                          following critical error. & N Recovery. . . . :   See +
+                          the lower level messages for details') SEV(40) +
+                          FMT((*CHAR 120)) CCSID(*JOB)
+
+             ADDMSGD    MSGID(UTE0003) MSGF(&LIB/UTEMSG) MSG('-------------- +
+                          Starting Unit &1 --------------') FMT((*CHAR 32)) +
                           CCSID(*JOB)
 
-             ADDMSGD    MSGID(UTE0003) MSGF(IUNIT/UTEMSG) +
-                          MSG('-------------- Starting Unit &1 +
-                          --------------') FMT((*CHAR 32)) CCSID(*JOB)
-
-             ADDMSGD    MSGID(UTE5000) MSGF(IUNIT/UTEMSG) MSG('Start +
-                          of User Messages') SECLVL('All user +
-                          messages are UTE5001 and higher') CCSID(*JOB)
-
-             CRTDTAARA  DTAARA(&LIB/VERSION) TYPE(*CHAR) LEN(25) +
-                          VALUE('0.1.0.201901070019') +
-                          TEXT('0.1.0.201901070019')
+             ADDMSGD    MSGID(UTE5000) MSGF(&LIB/UTEMSG) MSG('Start of User +
+                          Messages') SECLVL('All user messages are UTE5001 and +
+                          higher') CCSID(*JOB)
 
              ENDPGM
