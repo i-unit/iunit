@@ -22,13 +22,20 @@
  /*  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR   */
  /*  OTHER DEALINGS IN THE SOFTWARE.                                 */
  /*                                                                  */
- /* Command ....: RUNONE                                             */
- /* Function ...: single program unit test                           */
- /*                                                                  */
+ /*  Program ....: I_TEARDOWN                                         */
+ /*  Description : Run after all tests have been completed           */
+ /*  Author .....: W.S. Jongman                                      */
  /* ---------------------------------------------------------------- */
-             CMD        PROMPT('REMAIN single unit test')
+             PGM        PARM(&LIB)
 
-             PARM       KWD(LIBC) TYPE(*CHAR) LEN(10) PROMPT('Library')
+ /* ---------------------------------------------------------------- */
+ /* Declare the varaibles                                            */
+ /* ------------------------- -------------------------------------- */
+             DCL        VAR(&LIB) TYPE(*CHAR) LEN(10)
 
-             PARM       KWD(PGMN) TYPE(*CHAR) LEN(10) PROMPT('Program')
+ /* ---------------------------------------------------------------- */
+ /* Code                                                             */
+ /* ---------------------------------------------------------------- */
+             CHGJOB     LOGCLPGM(*YES)
 
+             ENDPGM
