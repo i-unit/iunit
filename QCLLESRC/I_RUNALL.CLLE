@@ -80,13 +80,14 @@
                    SNDPGMMSG  MSGID(UTE0001) MSGF(&LIB/UTEMSG) MSGDTA('*') TOPGMQ(*SAME)
                    SNDPGMMSG  MSGID(UTE0001) MSGF(&LIB/UTEMSG) MSGDTA('* -------' *CAT &TIME *CAT +
                                 '----------') TOPGMQ(*SAME)
-                   SNDPGMMSG  MSGID(UTE0001) MSGF(&LIB/UTEMSG) MSGDTA('***** FAIL     ' *CAT &ODOBNM
-                                TOPGMQ(*SAME)
-                   SNDPGMMSG  MSGID(UTE0001) MSGF(&LIB/UTEMSG) MSGDTA('* -------------------------')
-                                TOPGMQ(*SAME)
+                   SNDPGMMSG  MSGID(UTE0001) MSGF(&LIB/UTEMSG) MSGDTA('***** FAIL  -
+   ' *CAT &ODOBNM) TOPGMQ(*SAME)
+                   SNDPGMMSG  MSGID(UTE0001) MSGF(&LIB/UTEMSG) MSGDTA('* +
+                                -------------------------') TOPGMQ(*SAME)
 
-                   CHGVAR     VAR(&MSG) VALUE(&ODLBNM *TCAT '/' *TCAT &ODOBNM *TCAT ' unit test fail
-                                previous message for details')
+                   CHGVAR     VAR(&MSG) VALUE(&ODLBNM *TCAT '/' *TCAT &ODOBNM +
+                                *TCAT ' unit test failed. See previous message for +
+                                details')
                    SNDPGMMSG  MSGID(UTE0002) MSGF(&LIB/UTEMSG) MSGDTA(&MSG) TOPGMQ(*SAME)
 
                    CHGVAR     VAR(&FAIL) VALUE(&FAIL + 1)
@@ -95,8 +96,8 @@
 
                 RTVSYSVAL  SYSVAL(QTIME) RTNVAR(&TIME)
                 SNDPGMMSG  MSGID(UTE0001) MSGF(&LIB/UTEMSG) MSGDTA('*') TOPGMQ(*SAME)
-                SNDPGMMSG  MSGID(UTE0001) MSGF(&LIB/UTEMSG) MSGDTA('* Ended on: ' *CAT &TIME *CAT ' 
-                             &ODOBNM) TOPGMQ(*SAME)
+                SNDPGMMSG  MSGID(UTE0001) MSGF(&LIB/UTEMSG) MSGDTA('* Ended on: ' +
+                             *CAT &TIME *CAT ' for ' *CAT &ODOBNM) TOPGMQ(*SAME)
                 SNDPGMMSG  MSGID(UTE0001) MSGF(&LIB/UTEMSG) MSGDTA('*') TOPGMQ(*SAME)
 
              ENDDO
@@ -114,11 +115,13 @@
              CHGVAR     VAR(&GOODA) VALUE(&GOOD)
              CHGVAR     VAR(&FAILA) VALUE(&FAIL)
 
-             CHGVAR     VAR(&MSG) VALUE(&TOTALA *BCAT 'tests ran.' *BCAT &FAILA *TCAT ' failed, ' *B
-                          *BCAT 'good.')
-             IF         COND(&FAIL *GT 0) THEN(SNDPGMMSG MSGID(UTE0002) MSGF(&LIB/UTEMSG) MSGDTA(&MS
-             IF         COND(&FAIL *EQ 0) THEN(SNDPGMMSG MSGID(UTE0001) MSGF(&LIB/UTEMSG) MSGDTA(&MS
-                          TOPGMQ(*PRV) MSGTYPE(*COMP))
+             CHGVAR     VAR(&MSG) VALUE(&TOTALA *BCAT 'tests ran.' *BCAT &FAILA +
+                          *TCAT ' failed, ' *BCAT &GOODA *BCAT 'good.')
+             IF         COND(&FAIL *GT 0) THEN(SNDPGMMSG MSGID(UTE0002) +
+                          MSGF(&LIB/UTEMSG) MSGDTA(&MSG))
+             IF         COND(&FAIL *EQ 0) THEN(SNDPGMMSG MSGID(UTE0001) +
+                          MSGF(&LIB/UTEMSG) MSGDTA(&MSG) TOPGMQ(*PRV) +
+                          MSGTYPE(*COMP))
 
  /* ---------------------------------------------------------------- */
  /* Call teardown                                                    */
@@ -132,7 +135,7 @@
              DSPJOBLOG
              MONMSG     MSGID(CPF0000)
 
-             IF         COND(&FAIL *GT 0) THEN(SNDPGMMSG MSGID(UTE0002) MSGF(&LIB/UTEMSG) MSGDTA(&MS
-                          MSGTYPE(*ESCAPE))
+             IF         COND(&FAIL *GT 0) THEN(SNDPGMMSG MSGID(UTE0002) +
+                          MSGF(&LIB/UTEMSG) MSGDTA(&MSG) MSGTYPE(*ESCAPE))
 
              ENDPGM

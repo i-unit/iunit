@@ -23,7 +23,7 @@
  /*  OTHER DEALINGS IN THE SOFTWARE.                                 */
  /*                                                                  */
  /*                                                                  */
- /*  Program ....: I_RUNONE                                           */
+ /*  Program ....: I_RUNONE                                          */
  /*  Description : RUN ONE TEST IN THE SUPPLIED LIBRARY              */
  /*  Author .....: W.S. Jongman                                      */
  /* ---------------------------------------------------------------- */
@@ -55,14 +55,15 @@
  /* ---------------------------------------------------------------- */
  /* Read all records from the program                                */
  /* ------------------------- -------------------------------------- */
-             IF         COND(%SST(&PGM 1 1) *NE 'I_') THEN(DO)
+             IF         COND(%SST(&PGM 1 2) *NE 'I_') THEN(DO)
                 CHGVAR     VAR(&GOOD) VALUE(&GOOD + 1)
 
                 CALL       PGM(&LIB/&PGM)
                 MONMSG     MSGID(CPF0000) EXEC(DO)
 
-                   CHGVAR     VAR(&MSG) VALUE(&LIB  *TCAT '/' *TCAT &PGM    *TCAT ' unit test failed
-                                previous message for details')
+                   CHGVAR     VAR(&MSG) VALUE(&LIB *TCAT '/' *TCAT &PGM *TCAT ' +
+                                unit test failed. See previous message for +
+                                details')
                    SNDPGMMSG  MSGID(UTE0002) MSGF(&LIB/UTEMSG) MSGDTA(&MSG) TOPGMQ(*SAME)
 
                    CHGVAR     VAR(&FAIL) VALUE(&FAIL + 1)
@@ -79,12 +80,14 @@
              CHGVAR     VAR(&GOODA) VALUE(&GOOD)
              CHGVAR     VAR(&FAILA) VALUE(&FAIL)
 
-             CHGVAR     VAR(&MSG) VALUE(&TOTALA *BCAT 'tests ran.' *BCAT &FAILA *TCAT ' failed, ' *B
-                          *BCAT 'good.')
-             IF         COND(&FAIL *GT 0) THEN(SNDPGMMSG MSGID(UTE0002) MSGF(&LIB/UTEMSG) MSGDTA(&MS
-                          TOPGMQ(*PRV) MSGTYPE(*COMP))
-             IF         COND(&FAIL *EQ 0) THEN(SNDPGMMSG MSGID(UTE0001) MSGF(&LIB/UTEMSG) MSGDTA(&MS
-                          TOPGMQ(*PRV) MSGTYPE(*COMP))
+             CHGVAR     VAR(&MSG) VALUE(&TOTALA *BCAT 'tests ran.' *BCAT &FAILA +
+                          *TCAT ' failed, ' *BCAT &GOODA *BCAT 'good.')
+             IF         COND(&FAIL *GT 0) THEN(SNDPGMMSG MSGID(UTE0002) +
+                          MSGF(&LIB/UTEMSG) MSGDTA(&MSG) TOPGMQ(*PRV) +
+                          MSGTYPE(*COMP))
+             IF         COND(&FAIL *EQ 0) THEN(SNDPGMMSG MSGID(UTE0001) +
+                          MSGF(&LIB/UTEMSG) MSGDTA(&MSG) TOPGMQ(*PRV) +
+                          MSGTYPE(*COMP))
 
  /* ---------------------------------------------------------------- */
  /* Call teardown                                                    */
@@ -95,7 +98,7 @@
                           '/I_TEARDOWN program not found.'))
              SNDPGMMSG  MSGID(UTE0001) MSGF(&LIB/UTEMSG) MSGDTA(&MSG2) TOPGMQ(*SAME)
 
-             IF         COND(&FAIL *GT 0) THEN(SNDPGMMSG MSGID(UTE0002) MSGF(&LIB/UTEMSG) MSGDTA(&MS
-                          MSGTYPE(*ESCAPE))
+             IF         COND(&FAIL *GT 0) THEN(SNDPGMMSG MSGID(UTE0002) +
+                          MSGF(&LIB/UTEMSG) MSGDTA(&MSG) MSGTYPE(*ESCAPE))
 
              ENDPGM

@@ -31,16 +31,14 @@
 
              CRTBNDCL   PGM(&LIB/I_RUNALL) SRCFILE(&LIB/QCLLESRC) DFTACTGRP(*NO) +
                           ACTGRP(*NEW)
-             CRTCMD     CMD(&LIB/RUNALL) PGM(I_RUNALL) +
-                          SRCFILE(&LIB/QCMDSRC)
+             CRTCMD     CMD(&LIB/RUNALL) PGM(I_RUNALL) SRCFILE(&LIB/QCMDSRC)
              CRTBNDCL   PGM(&LIB/I_RUNONE) SRCFILE(&LIB/QCLLESRC) DFTACTGRP(*NO) +
                           ACTGRP(*NEW)
-             CRTCMD     CMD(&LIB/RUNONE) PGM(I_RUNONE) +
-                          SRCFILE(&LIB/QCMDSRC)
+             CRTCMD     CMD(&LIB/RUNONE) PGM(I_RUNONE) SRCFILE(&LIB/QCMDSRC)
              CRTBNDCL   PGM(&LIB/I_SETUP) SRCFILE(&LIB/QCLLESRC) DFTACTGRP(*NO) +
                           ACTGRP(*NEW)
-             CRTBNDCL   PGM(&LIB/I_TEARDOWN) SRCFILE(&LIB/QCLLESRC) +
-                          DFTACTGRP(*NO) ACTGRP(*NEW)
+             CRTBNDCL   PGM(&LIB/I_TEARDOWN) SRCFILE(&LIB/QCLLESRC) DFTACTGRP(*NO) +
+                          ACTGRP(*NEW)
              CRTBNDCL   PGM(&LIB/FAIL) SRCFILE(&LIB/QCLLESRC) +
                           DFTACTGRP(*NO) ACTGRP(*NEW)
              CRTBNDCL   PGM(&LIB/PASS) SRCFILE(&LIB/QCLLESRC) +
