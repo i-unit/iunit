@@ -12,7 +12,7 @@ iunit.restore IUNIT
 ## Test
 addlible iunit  
 runone iunit pass  
-runall
+runall iunit
 
 ## Using
 Create a library 'mytest'  
