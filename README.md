@@ -15,12 +15,12 @@ runone iunit pass
 runall iunit
 
 ## Using
-Create a test suite library 'mytest'  
-Create a CLLE program named 'pass' [with this program source.](https://raw.githubusercontent.com/i-unit/iunit/master/QCLLESRC/PASS.CLLE)   
-addlible iunit
-crtdupobj utemsg iunit *msgf mytst
-addlible mytest    
-runall mytest  
+* Create a test suite library 'mytest'  
+* Create a CLLE program named 'pass' [with this program source.](https://raw.githubusercontent.com/i-unit/iunit/master/QCLLESRC/PASS.CLLE)   
+* addlible iunit
+* crtdupobj utemsg iunit *msgf mytst
+* addlible mytest    
+* runall mytest  
 
 Create a CLLE program named 'fail' [with this program source.](https://raw.githubusercontent.com/i-unit/iunit/master/QCLLESRC/FAIL.CLLE)   
 runall mytest
