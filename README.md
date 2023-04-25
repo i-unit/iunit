@@ -15,10 +15,11 @@ runone iunit pass
 runall iunit
 
 ## Using
-Create a library 'mytest'  
+Create a test suite library 'mytest'  
 Create a CLLE program named 'pass' [with this program source.](https://raw.githubusercontent.com/i-unit/iunit/master/QCLLESRC/PASS.CLLE)   
-addlible iunit *last  
-ADDLIBLE LIB(MYTEST) POSITION(*BEFORE IUNIT)    
+addlible iunit
+crtdupobj utemsg iunit *msgf mytst
+addlible mytest    
 runall mytest  
 
 Create a CLLE program named 'fail' [with this program source.](https://raw.githubusercontent.com/i-unit/iunit/master/QCLLESRC/FAIL.CLLE)   
@@ -33,7 +34,7 @@ I_TEARDOWN is called after RUNONE and RUNALL have ran all tests
 
 ## Best practices
 Do not depend one test on the result of another test  
-A library is set of related tests. Create as many libraries as you need and call them sequentially  
+A library is set of related tests (a test suite). Create as many libraries as you need and call them sequentially  
 When using [TD/OMS as your change management system.](https://remainsoftware.com) include tests in your compile or transfer   
 
 ## Tips
