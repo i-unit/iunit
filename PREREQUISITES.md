@@ -1,7 +1,7 @@
 # Prerequisites
 * [IBM i package manager](https://ibmi-oss-docs.readthedocs.io/en/latest/yum/README.html) (if that link is dead search 'ibm i yum package manager')  
 * bash (yum install bash)  
-* putty 
+* putty or ssh client 
 
 ## First Time Access To IBMi
 1. putty \<user\>@\<your.ibmi\>
