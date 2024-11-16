@@ -1,5 +1,5 @@
 # Prerequisites
-* [IBM i package manager](https://bitbucket.org/ibmi/opensource/src/master/docs/yum/) (if that link is dead search 'ibm i yum package manager')  
+* [IBM i package manager](https://ibmi-oss-docs.readthedocs.io/en/latest/yum/README.html) (if that link is dead search 'ibm i yum package manager')  
 * bash (yum install bash)  
 * putty 
 
